@@ -20,9 +20,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Item, ItemType, Category } from "@/types/item";
+import { ItemType, Category } from "@/types/item";
 import { toast } from "@/hooks/use-toast";
 import { ImageUpload } from "./ImageUpload";
+import { supabase } from "@/integrations/supabase/client";
 
 const categories: Category[] = [
   "Bags",
@@ -37,7 +38,7 @@ const categories: Category[] = [
 ];
 
 interface LostFoundFormProps {
-  onSubmit: (item: Item) => void;
+  onSubmit: () => void;
 }
 
 export function LostFoundForm({ onSubmit }: LostFoundFormProps) {
@@ -51,8 +52,9 @@ export function LostFoundForm({ onSubmit }: LostFoundFormProps) {
   const [phone, setPhone] = useState("");
   const [date, setDate] = useState<Date>();
   const [imageUrl, setImageUrl] = useState<string>();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!name || !description || !category || !location || !reporterName || !email || !date) {
@@ -64,38 +66,51 @@ export function LostFoundForm({ onSubmit }: LostFoundFormProps) {
       return;
     }
 
-    const newItem: Item = {
-      id: crypto.randomUUID(),
-      type: itemType,
-      name,
-      description,
-      category: category as Category,
-      location,
-      reporterName,
-      email,
-      phone: phone || undefined,
-      date,
-      createdAt: new Date(),
-      imageUrl,
-    };
+    setIsSubmitting(true);
 
-    onSubmit(newItem);
+    try {
+      const { error } = await supabase.from("items").insert({
+        type: itemType,
+        name,
+        description,
+        category: category as Category,
+        location,
+        reporter_name: reporterName,
+        email,
+        phone: phone || null,
+        date: format(date, "yyyy-MM-dd"),
+        image_url: imageUrl || null,
+      });
 
-    // Reset form
-    setName("");
-    setDescription("");
-    setCategory("");
-    setLocation("");
-    setReporterName("");
-    setEmail("");
-    setPhone("");
-    setDate(undefined);
-    setImageUrl(undefined);
+      if (error) throw error;
 
-    toast({
-      title: "Report submitted!",
-      description: `Your ${itemType} item has been reported successfully.`,
-    });
+      // Reset form
+      setName("");
+      setDescription("");
+      setCategory("");
+      setLocation("");
+      setReporterName("");
+      setEmail("");
+      setPhone("");
+      setDate(undefined);
+      setImageUrl(undefined);
+
+      toast({
+        title: "Report submitted!",
+        description: `Your ${itemType} item has been reported successfully.`,
+      });
+
+      onSubmit();
+    } catch (error) {
+      console.error("Error submitting item:", error);
+      toast({
+        title: "Error",
+        description: "Failed to submit report. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -303,9 +318,10 @@ export function LostFoundForm({ onSubmit }: LostFoundFormProps) {
         type="submit" 
         size="lg" 
         className="w-full h-12 text-base font-semibold gap-2 shadow-card hover:shadow-card-hover transition-shadow"
+        disabled={isSubmitting}
       >
         <Send className="h-4 w-4" />
-        Submit Report
+        {isSubmitting ? "Submitting..." : "Submit Report"}
       </Button>
     </form>
   );

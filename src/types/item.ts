@@ -18,10 +18,10 @@ export interface Item {
   description: string;
   category: Category;
   location: string;
-  reporterName: string;
+  reporter_name: string;
   email: string;
   phone?: string;
-  date: Date;
-  createdAt: Date;
-  imageUrl?: string;
+  date: string;
+  created_at: string;
+  image_url?: string;
 }

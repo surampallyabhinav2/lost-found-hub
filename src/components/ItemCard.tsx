@@ -1,5 +1,5 @@
-import { format } from "date-fns";
-import { MapPin, Calendar, Tag, ImageIcon } from "lucide-react";
+import { format, parseISO } from "date-fns";
+import { MapPin, Calendar, Tag, ImageIcon, User } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Item } from "@/types/item";
@@ -11,6 +11,8 @@ interface ItemCardProps {
 }
 
 export function ItemCard({ item, index }: ItemCardProps) {
+  const dateValue = typeof item.date === 'string' ? parseISO(item.date) : item.date;
+  
   return (
     <Card 
       className={cn(
@@ -24,9 +26,9 @@ export function ItemCard({ item, index }: ItemCardProps) {
         "relative h-40 overflow-hidden",
         item.type === "lost" ? "bg-lost/5" : "bg-found/5"
       )}>
-        {item.imageUrl ? (
+        {item.image_url ? (
           <img
-            src={item.imageUrl}
+            src={item.image_url}
             alt={item.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
@@ -67,7 +69,7 @@ export function ItemCard({ item, index }: ItemCardProps) {
           </div>
           <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-muted text-muted-foreground">
             <Calendar className="h-3 w-3" />
-            <span>{format(item.date, "MMM d")}</span>
+            <span>{format(dateValue, "MMM d, yyyy")}</span>
           </div>
         </div>
 
@@ -77,9 +79,10 @@ export function ItemCard({ item, index }: ItemCardProps) {
         </div>
 
         <div className="pt-3 border-t border-border">
-          <p className="text-xs text-muted-foreground">
-            Reported by <span className="font-medium text-foreground">{item.reporterName}</span>
-          </p>
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <User className="h-3 w-3" />
+            <span>Contact: <span className="font-medium text-foreground">{item.reporter_name}</span></span>
+          </div>
         </div>
       </CardContent>
     </Card>

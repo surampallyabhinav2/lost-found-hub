@@ -1,14 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, ClipboardList } from "lucide-react";
 import { LostFoundForm } from "@/components/LostFoundForm";
 import { RecentItems } from "@/components/RecentItems";
 import { Item } from "@/types/item";
+import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
   const [items, setItems] = useState<Item[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleSubmit = (newItem: Item) => {
-    setItems((prev) => [newItem, ...prev]);
+  const fetchItems = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("items")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      setItems(data || []);
+    } catch (error) {
+      console.error("Error fetching items:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
+
+  const handleSubmit = () => {
+    fetchItems();
   };
 
   return (
@@ -61,7 +83,7 @@ const Index = () => {
               )}
             </div>
           </div>
-          <RecentItems items={items} />
+          <RecentItems items={items} loading={loading} />
         </section>
       </main>
 
