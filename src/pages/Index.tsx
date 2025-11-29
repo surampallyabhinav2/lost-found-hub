@@ -14,56 +14,62 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b border-border bg-card">
-        <div className="container max-w-6xl mx-auto px-4 py-6">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10">
-              <Search className="h-5 w-5 text-primary" />
+      <header className="gradient-header text-primary-foreground">
+        <div className="container max-w-6xl mx-auto px-4 py-8">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary-foreground/20 backdrop-blur-sm">
+              <Search className="h-6 w-6" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-foreground">Lost & Found</h1>
-              <p className="text-sm text-muted-foreground">Report and find lost items</p>
+              <h1 className="text-2xl font-bold tracking-tight">Lost & Found</h1>
+              <p className="text-primary-foreground/80 text-sm">Help reunite items with their owners</p>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="container max-w-6xl mx-auto px-4 py-8">
+      <main className="container max-w-6xl mx-auto px-4 py-8 space-y-12">
         {/* Form Section */}
-        <section className="mb-12">
-          <div className="bg-card rounded-xl shadow-card p-6 md:p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary">
-                <ClipboardList className="h-5 w-5 text-primary-foreground" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-card-foreground">Report Lost/Found Item</h2>
-                <p className="text-muted-foreground">Fill out the form below to report an item</p>
+        <section className="-mt-4">
+          <div className="bg-card rounded-2xl shadow-elevated border border-border overflow-hidden">
+            <div className="gradient-header px-6 py-5">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-foreground/20">
+                  <ClipboardList className="h-5 w-5 text-primary-foreground" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-primary-foreground">Report Lost/Found Item</h2>
+                  <p className="text-primary-foreground/80 text-sm">Fill out the details below</p>
+                </div>
               </div>
             </div>
-            <LostFoundForm onSubmit={handleSubmit} />
+            <div className="p-6 md:p-8">
+              <LostFoundForm onSubmit={handleSubmit} />
+            </div>
           </div>
         </section>
 
         {/* Recent Items Section */}
         <section>
-          <div className="flex items-center gap-3 mb-6">
-            <h2 className="text-2xl font-bold text-foreground">Recent Items</h2>
-            {items.length > 0 && (
-              <span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-primary/10 text-primary">
-                {items.length}
-              </span>
-            )}
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <h2 className="text-2xl font-bold text-foreground">Recent Items</h2>
+              {items.length > 0 && (
+                <span className="inline-flex items-center justify-center px-3 py-1 rounded-full text-sm font-semibold bg-primary text-primary-foreground">
+                  {items.length}
+                </span>
+              )}
+            </div>
           </div>
           <RecentItems items={items} />
         </section>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border mt-16">
-        <div className="container max-w-6xl mx-auto px-4 py-6">
+      <footer className="border-t border-border mt-16 bg-muted/30">
+        <div className="container max-w-6xl mx-auto px-4 py-8">
           <p className="text-center text-sm text-muted-foreground">
-            Lost & Found Reporting System — Help reunite items with their owners
+            Lost & Found Reporting System — Helping communities reconnect with their belongings
           </p>
         </div>
       </footer>
