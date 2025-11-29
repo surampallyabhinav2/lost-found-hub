@@ -1,12 +1,22 @@
 import { Item } from "@/types/item";
 import { ItemCard } from "./ItemCard";
-import { Package } from "lucide-react";
+import { Package, Loader2 } from "lucide-react";
 
 interface RecentItemsProps {
   items: Item[];
+  loading?: boolean;
 }
 
-export function RecentItems({ items }: RecentItemsProps) {
+export function RecentItems({ items, loading }: RecentItemsProps) {
+  if (loading) {
+    return (
+      <div className="text-center py-16 px-4 rounded-xl border-2 border-dashed border-border bg-muted/30">
+        <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-4" />
+        <p className="text-muted-foreground">Loading items...</p>
+      </div>
+    );
+  }
+
   if (items.length === 0) {
     return (
       <div className="text-center py-16 px-4 rounded-xl border-2 border-dashed border-border bg-muted/30">
