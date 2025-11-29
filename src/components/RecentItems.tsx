@@ -1,6 +1,6 @@
 import { Item } from "@/types/item";
 import { ItemCard } from "./ItemCard";
-import { Search } from "lucide-react";
+import { Package } from "lucide-react";
 
 interface RecentItemsProps {
   items: Item[];
@@ -9,11 +9,11 @@ interface RecentItemsProps {
 export function RecentItems({ items }: RecentItemsProps) {
   if (items.length === 0) {
     return (
-      <div className="text-center py-12">
+      <div className="text-center py-16 px-4 rounded-xl border-2 border-dashed border-border bg-muted/30">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted mb-4">
-          <Search className="h-8 w-8 text-muted-foreground" />
+          <Package className="h-8 w-8 text-muted-foreground" />
         </div>
-        <h3 className="text-lg font-medium text-foreground mb-2">No items reported yet</h3>
+        <h3 className="text-lg font-semibold text-foreground mb-2">No items reported yet</h3>
         <p className="text-muted-foreground max-w-sm mx-auto">
           Be the first to report a lost or found item using the form above.
         </p>
@@ -22,7 +22,7 @@ export function RecentItems({ items }: RecentItemsProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
       {items.map((item, index) => (
         <ItemCard key={item.id} item={item} index={index} />
       ))}

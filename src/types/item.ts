@@ -23,4 +23,5 @@ export interface Item {
   phone?: string;
   date: Date;
   createdAt: Date;
+  imageUrl?: string;
 }
